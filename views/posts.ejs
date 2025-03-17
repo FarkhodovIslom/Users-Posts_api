@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Fontawesome icons link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Custom css link -->
+    <link rel="stylesheet" href="/css/style.css">
+    <title>View parked cars</title>
+</head>
+<body class="bg-light">
+    <center>
+        <div class="container">
+            <h1 class="text-info">View posts</h1> 
+            
+            <table class="table table-light table-bordered border-info table-hover">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Post title</th>
+                    <th>Post content</th>
+                    <th>Posted at</th>
+                    <th>Action</th>
+                </tr>
+                <% for (let index in posts) { %>
+                <tr>
+                    <td><%= posts[index].id %></td>
+                    <td><%= posts[index].username %></td>
+                    <td><%= posts[index].email %></td>
+                    <td><%= posts[index].post_title %></td>
+                    <td><%= posts[index].post_content %></td>
+                    <td><%= posts[index].posted_at %></td>
+                    <td>
+                        <button class="btn btn-danger btn-sm delete_post" data-id="<%= posts[index].id %>">Delete</button>
+                    </td>
+                </tr>
+                <% } %> 
+
+                <!-- Delete zapros uchun function -->
+                 <script>
+                    function deletePost(id) {
+                        if ( confirm("Are you sure to delete this post?") ) {
+                            fetch(`/post/${id}`, {
+                                method: "DELETE"
+                            }).then(res => {
+                                if (res.ok) {
+                                    window.location.reload();
+                                } else {
+                                    alert("O'chirishda xatolik yuz berdi!")
+                                }
+                            }).catch(err => {
+                                console.log("Error:", err);
+                            });
+                        }
+                    }
+
+                    document.querySelectorAll(".delete_post").forEach(btn => {
+                        btn.addEventListener("click", function() {
+                            const postId = this.dataset.id;
+                            deletePost(postId);
+                        });
+                    });
+                 </script>
+            </table>
+
+            <a href="/" class="btn btn-outline-info">Go back</a>
+        </div>
+    </center>
+</body>
+</html>
